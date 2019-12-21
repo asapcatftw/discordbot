@@ -9,12 +9,13 @@ from discord.ext import tasks, commands
 
 import dbl
 
-file = open("../TOKEN.txt", "r")
-TOKEN = str(file.read(59))
+#replaced token.txt to .env mainly for docker.
+TOKEN = os.getenv("TOKEN")
 file = open("../DBL", "r")
 API = str(file.read(155))
-print(TOKEN)
 print(API)
+
+
 bot = commands.Bot(command_prefix='.')
 bot.remove_command('help')
 
