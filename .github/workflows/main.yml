@@ -17,13 +17,10 @@ jobs:
       name: Available platforms
       run: echo ${{ steps.buildx.outputs.platforms }}    
     -
-      name: Run Buildx
+      name: Run Buildx and push
       run: |
-        docker buildx build --platform linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64 --output "type=image,push=false" .
-           
-    - name: Publish to Docker Repository
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: cool2zap/isosceles-bot
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }} 
+        docker login -u "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+        docker buildx build -t cool2zap/isosceles-bot:multiarc --platform linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64 . --push
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
