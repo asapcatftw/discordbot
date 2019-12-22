@@ -1,0 +1,27 @@
+  
+name: 'isosceles bot docker'
+on: [push]
+jobs:
+  buildx:
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v1
+    -
+      name: Set up Docker Buildx
+      id: buildx
+      uses: crazy-max/ghaction-docker-buildx@v1
+      with:
+        version: latest
+    -
+      name: Available platforms
+      run: echo ${{ steps.buildx.outputs.platforms }}    
+    -
+      name: Run Buildx and push
+      run: |
+        docker login -u "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+        docker buildx build -t cool2zap/isosceles-bot:arm7 --platform linux/arm/v7 . --push
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
